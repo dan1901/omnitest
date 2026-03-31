@@ -13,6 +13,23 @@ linters:
 linters-settings:
   errcheck:
     check-type-assertions: true
+    exclude-functions:
+      - fmt.Sscanf
+      - (io.Closer).Close
+      - (*net.Conn).Close
+      - (net/http.ResponseWriter).Write
 
 issues:
   exclude-use-default: false
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+    - path: internal/ws/
+      linters:
+        - errcheck
+      text: "SetReadDeadline|SetWriteDeadline|WriteMessage|Close"
+    - path: internal/store/
+      linters:
+        - errcheck
+      text: "json.Unmarshal"

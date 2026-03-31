@@ -54,7 +54,7 @@ func (c *Collector) Record(r model.RequestResult) {
 	}
 
 	c.mu.Lock()
-	c.histogram.RecordValue(latencyUs)
+	_ = c.histogram.RecordValue(latencyUs)
 	c.mu.Unlock()
 }
 

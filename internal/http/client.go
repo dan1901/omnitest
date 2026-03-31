@@ -87,7 +87,7 @@ func (c *Client) Do(ctx context.Context, baseURL string, req model.Request, head
 
 	// body를 읽어야 커넥션이 재사용됨. 내용은 불필요하므로 discard.
 	n, _ := io.Copy(io.Discard, resp.Body)
-	resp.Body.Close()
+	_ = resp.Body.Close()
 
 	latency := time.Since(start)
 
