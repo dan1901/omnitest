@@ -145,13 +145,6 @@ func getRequestID(w http.ResponseWriter) string {
 	return w.Header().Get("X-Request-ID")
 }
 
-func getRequestIDFromCtx(r *http.Request) string {
-	if id, ok := r.Context().Value(requestIDKey).(string); ok {
-		return id
-	}
-	return ""
-}
-
 func writeJSON(w http.ResponseWriter, status int, data any, reqID string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
@@ -417,7 +410,7 @@ func (s *Server) runTest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 상태를 running으로
-	s.store.UpdateTestRunStatus(r.Context(), run.ID, model.TestRunRunning)
+	_ = s.store.UpdateTestRunStatus(r.Context(), run.ID, model.TestRunRunning)
 	run.Status = model.TestRunRunning
 
 	// WebSocket 이벤트
@@ -458,7 +451,7 @@ func (s *Server) stopTest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.store.UpdateTestRunStatus(r.Context(), run.ID, model.TestRunStopped)
+	_ = s.store.UpdateTestRunStatus(r.Context(), run.ID, model.TestRunStopped)
 
 	// 모든 Agent에 StopTest 명령 큐잉
 	for _, agent := range s.ctrl.AgentManager.AllAgents() {
@@ -533,7 +526,7 @@ func (s *Server) stopTestByRunID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.store.UpdateTestRunStatus(r.Context(), runID, model.TestRunStopped)
+	_ = s.store.UpdateTestRunStatus(r.Context(), runID, model.TestRunStopped)
 
 	for _, agent := range s.ctrl.AgentManager.AllAgents() {
 		s.ctrl.AgentManager.EnqueueStopTest(agent.AgentID, runID)

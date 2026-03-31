@@ -66,7 +66,7 @@ func (p *Printer) render(snap model.MetricSnapshot) {
 	}
 
 	// 헤더
-	sb.WriteString(p.color(colorBold, fmt.Sprintf("  Elapsed   VUsers   RPS      Avg      P50      P95      P99      Errors\n")))
+	sb.WriteString(p.color(colorBold, "  Elapsed   VUsers   RPS      Avg      P50      P95      P99      Errors\n"))
 	sb.WriteString("  ─────────────────────────────────────────────────────────────────────────\n")
 
 	// 메트릭 행

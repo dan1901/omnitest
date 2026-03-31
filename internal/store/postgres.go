@@ -269,7 +269,7 @@ func (s *Store) GetTestRun(ctx context.Context, id string) (*model.TestRun, erro
 		r.ResultSummary = &result
 	}
 	if thresholdJSON != nil {
-		json.Unmarshal(thresholdJSON, &r.ThresholdResults)
+		_ = json.Unmarshal(thresholdJSON, &r.ThresholdResults)
 	}
 	return &r, nil
 }
@@ -308,7 +308,7 @@ func (s *Store) ListTestRuns(ctx context.Context, testID string, page, perPage i
 			r.ResultSummary = &result
 		}
 		if thresholdJSON != nil {
-			json.Unmarshal(thresholdJSON, &r.ThresholdResults)
+			_ = json.Unmarshal(thresholdJSON, &r.ThresholdResults)
 		}
 		runs = append(runs, r)
 	}

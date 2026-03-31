@@ -61,7 +61,7 @@ func TestServer_HandleRegister_Direct(t *testing.T) {
 		MaxVusers: 1000,
 	}
 
-	resp, err := server.Register(nil, req)
+	resp, err := server.Register(context.Background(), req)
 	if err != nil {
 		t.Fatalf("Register() error = %v", err)
 	}
@@ -87,7 +87,7 @@ func TestServer_HandleHeartbeat_Direct(t *testing.T) {
 		MemoryUsage: 30.0,
 	}
 
-	resp, err := server.Heartbeat(nil, req)
+	resp, err := server.Heartbeat(context.Background(), req)
 	if err != nil {
 		t.Fatalf("Heartbeat() error = %v", err)
 	}
@@ -103,7 +103,7 @@ func TestServer_StartTest_NoHandler(t *testing.T) {
 	handler := &mockAgentHandler{}
 	server := NewServer(0, handler)
 
-	resp, err := server.StartTest(nil, &omnitestv1.StartTestRequest{
+	resp, err := server.StartTest(context.Background(), &omnitestv1.StartTestRequest{
 		TestRunId:      "run-1",
 		ScenarioYaml:   "test: yaml",
 		AssignedVusers: 100,
@@ -126,7 +126,7 @@ func TestServer_StartTest_WithHandler(t *testing.T) {
 		return &omnitestv1.StartTestResponse{Accepted: true}, nil
 	}
 
-	resp, err := server.StartTest(nil, &omnitestv1.StartTestRequest{TestRunId: "run-1"})
+	resp, err := server.StartTest(context.Background(), &omnitestv1.StartTestRequest{TestRunId: "run-1"})
 	if err != nil {
 		t.Fatalf("StartTest() error = %v", err)
 	}

@@ -65,7 +65,7 @@ func main() {
 			for _, env := range envVars {
 				parts := strings.SplitN(env, "=", 2)
 				if len(parts) == 2 {
-					os.Setenv(parts[0], parts[1])
+					_ = os.Setenv(parts[0], parts[1])
 				}
 			}
 
@@ -223,7 +223,7 @@ func main() {
 				<-ctx.Done()
 				shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
 				defer shutdownCancel()
-				ctrl.Shutdown(shutdownCtx)
+				_ = ctrl.Shutdown(shutdownCtx)
 			}()
 
 			if err := ctrl.Start(ctx, apiServer.Handler()); err != nil {
