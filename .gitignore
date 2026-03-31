@@ -34,3 +34,7 @@ Thumbs.db
 
 # env file
 .env
+
+# Internal planning docs
+docs/pitch/
+docs/plan/
