@@ -256,7 +256,7 @@ func main() {
 	fmt.Println("║    POST /api/users         (30-80ms)        ║")
 	fmt.Println("║    GET  /api/products      (50-150ms)       ║")
 	fmt.Println("║    GET  /api/search?q=     (100-300ms)      ║")
-	fmt.Println("║    POST /api/orders        (50-100ms, 5%err)║")
+	fmt.Println("║    POST /api/orders        (50-100ms, err5%) ║")
 	fmt.Println("║    GET  /api/slow          (500-2000ms)     ║")
 	fmt.Println("║    GET  /api/flaky         (30% error rate) ║")
 	fmt.Println("║    GET  /api/echo          (인증 필요)       ║")
