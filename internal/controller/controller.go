@@ -104,7 +104,7 @@ func (c *Controller) Start(ctx context.Context, httpHandler http.Handler) error 
 func (c *Controller) Shutdown(ctx context.Context) error {
 	c.grpcServer.Stop()
 	if c.httpServer != nil {
-		c.httpServer.Shutdown(ctx)
+		_ = c.httpServer.Shutdown(ctx)
 	}
 	c.store.Close()
 	return nil

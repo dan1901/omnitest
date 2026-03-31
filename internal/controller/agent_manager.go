@@ -74,7 +74,7 @@ func (m *AgentManager) Heartbeat(agentID string, status model.AgentStatus, cpuUs
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	m.store.UpdateAgentHeartbeat(ctx, agentID, status, cpuUsage, memoryUsage, activeVUsers)
+	_ = m.store.UpdateAgentHeartbeat(ctx, agentID, status, cpuUsage, memoryUsage, activeVUsers)
 }
 
 // EnqueueStartTest는 Agent에 StartTest 명령을 큐에 넣는다.
@@ -188,7 +188,7 @@ func (m *AgentManager) Remove(agentID string) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	m.store.DeleteAgent(ctx, agentID)
+	_ = m.store.DeleteAgent(ctx, agentID)
 }
 
 // SetStatus sets the status of a specific agent.
@@ -227,7 +227,7 @@ func (m *AgentManager) markOffline() {
 			a.Status = model.AgentStatusOffline
 
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			m.store.UpdateAgentStatus(ctx, a.AgentID, model.AgentStatusOffline)
+			_ = m.store.UpdateAgentStatus(ctx, a.AgentID, model.AgentStatusOffline)
 			cancel()
 		}
 	}

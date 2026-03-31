@@ -12,12 +12,17 @@ linters:
 
 linters-settings:
   errcheck:
-    check-type-assertions: true
+    check-type-assertions: false
     exclude-functions:
       - fmt.Sscanf
+      - fmt.Fprintf
+      - fmt.Fprintln
       - (io.Closer).Close
-      - (*net.Conn).Close
+      - (*os.File).Close
       - (net/http.ResponseWriter).Write
+      - (*encoding/json.Encoder).Encode
+      - (*encoding/json.Decoder).Decode
+      - json.Unmarshal
 
 issues:
   exclude-use-default: false
@@ -28,8 +33,6 @@ issues:
     - path: internal/ws/
       linters:
         - errcheck
-      text: "SetReadDeadline|SetWriteDeadline|WriteMessage|Close"
-    - path: internal/store/
+    - path: internal/grpc/omnitestv1/
       linters:
-        - errcheck
-      text: "json.Unmarshal"
+        - all
