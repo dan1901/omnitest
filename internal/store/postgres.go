@@ -105,7 +105,7 @@ func (s *Store) ListAgents(ctx context.Context) ([]model.AgentInfo, error) {
 			return nil, err
 		}
 		if labelsJSON != nil {
-			json.Unmarshal(labelsJSON, &a.Labels)
+			_ = json.Unmarshal(labelsJSON, &a.Labels)
 		}
 		if lastHB != nil {
 			a.LastHeartbeat = *lastHB
@@ -131,7 +131,7 @@ func (s *Store) GetAgent(ctx context.Context, agentID string) (*model.AgentInfo,
 		return nil, err
 	}
 	if labelsJSON != nil {
-		json.Unmarshal(labelsJSON, &a.Labels)
+		_ = json.Unmarshal(labelsJSON, &a.Labels)
 	}
 	if lastHB != nil {
 		a.LastHeartbeat = *lastHB
@@ -265,7 +265,7 @@ func (s *Store) GetTestRun(ctx context.Context, id string) (*model.TestRun, erro
 	}
 	if resultJSON != nil {
 		var result model.TestResult
-		json.Unmarshal(resultJSON, &result)
+		_ = json.Unmarshal(resultJSON, &result)
 		r.ResultSummary = &result
 	}
 	if thresholdJSON != nil {
@@ -304,7 +304,7 @@ func (s *Store) ListTestRuns(ctx context.Context, testID string, page, perPage i
 		}
 		if resultJSON != nil {
 			var result model.TestResult
-			json.Unmarshal(resultJSON, &result)
+			_ = json.Unmarshal(resultJSON, &result)
 			r.ResultSummary = &result
 		}
 		if thresholdJSON != nil {
