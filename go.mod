@@ -1,6 +1,6 @@
 module github.com/omnitest/omnitest
 
-go 1.25.6
+go 1.23.0
 
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2
