@@ -1,0 +1,45 @@
+# 07-stress-test.yaml
+# 스트레스 테스트 데모. 높은 동시 사용자로 서버 한계를 탐색.
+# VUser 수를 단계적으로 높여가며 서버 성능 저하 지점을 찾는 시나리오.
+#
+# 실행:
+#   omnitest run examples/scenarios/07-stress-test.yaml
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+
+scenarios:
+  - name: "경부하 (워밍업)"
+    target: "demo"
+    vusers: 10
+    duration: "10s"
+    requests:
+      - method: GET
+        path: "/api/users"
+
+  - name: "중부하"
+    target: "demo"
+    vusers: 100
+    duration: "20s"
+    ramp_up: "5s"
+    requests:
+      - method: GET
+        path: "/api/users"
+
+  - name: "고부하 (스트레스)"
+    target: "demo"
+    vusers: 500
+    duration: "30s"
+    ramp_up: "10s"
+    requests:
+      - method: GET
+        path: "/api/variable-load"
+
+thresholds:
+  - metric: "http_req_duration_p99"
+    condition: "< 500ms"
+  - metric: "http_req_failed"
+    condition: "< 5%"

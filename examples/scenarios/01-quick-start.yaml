@@ -1,0 +1,20 @@
+# 01-quick-start.yaml
+# 가장 기본적인 부하 테스트. OmniTest 첫 사용자를 위한 시나리오.
+#
+# 실행:
+#   omnitest run examples/scenarios/01-quick-start.yaml
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+
+scenarios:
+  - name: "Quick Start - 기본 GET 요청"
+    target: "demo"
+    vusers: 10
+    duration: "15s"
+    requests:
+      - method: GET
+        path: "/api/users"

@@ -1,0 +1,12 @@
+version: "1"
+
+targets: []
+
+scenarios:
+  - name: "test"
+    target: "none"
+    vusers: 1
+    duration: "1s"
+    requests:
+      - method: GET
+        path: "/get"

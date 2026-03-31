@@ -1,0 +1,52 @@
+# 10-report-demo.yaml
+# JSON + HTML 리포트 생성 데모.
+# 다양한 엔드포인트를 혼합하여 풍부한 리포트 데이터를 생성.
+#
+# 실행:
+#   omnitest run examples/scenarios/10-report-demo.yaml \
+#     --out json,html \
+#     --out-dir ./reports
+#
+# 결과:
+#   ./reports/report-YYYYMMDD-HHMMSS.json
+#   ./reports/report-YYYYMMDD-HHMMSS.html  (브라우저에서 열기)
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+    headers:
+      Accept: "application/json"
+
+scenarios:
+  - name: "빠른 API (리포트 비교용)"
+    target: "demo"
+    vusers: 30
+    duration: "20s"
+    ramp_up: "5s"
+    requests:
+      - method: GET
+        path: "/api/users"
+
+  - name: "중간 API (리포트 비교용)"
+    target: "demo"
+    vusers: 20
+    duration: "20s"
+    requests:
+      - method: GET
+        path: "/api/products"
+
+  - name: "느린 API (리포트 비교용)"
+    target: "demo"
+    vusers: 10
+    duration: "20s"
+    requests:
+      - method: GET
+        path: "/api/search?q=performance"
+
+thresholds:
+  - metric: "http_req_duration_p95"
+    condition: "< 500ms"
+  - metric: "http_req_failed"
+    condition: "< 2%"

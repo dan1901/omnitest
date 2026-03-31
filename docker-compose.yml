@@ -1,0 +1,106 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: omnitest-postgres
+    environment:
+      POSTGRES_USER: omnitest
+      POSTGRES_PASSWORD: omnitest
+      POSTGRES_DB: omnitest
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d/migrations
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql
+    networks:
+      - omnitest-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U omnitest"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  controller:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["controller"]
+    container_name: omnitest-controller
+    ports:
+      - "8080:8080"   # REST API + WebSocket
+      - "9090:9090"   # gRPC
+    environment:
+      OMNITEST_DB_URL: postgres://omnitest:omnitest@postgres:5432/omnitest?sslmode=disable
+      OMNITEST_GRPC_PORT: "9090"
+      OMNITEST_HTTP_PORT: "8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - omnitest-net
+
+  agent-1:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["agent", "--controller=controller:9090", "--name=agent-1"]
+    container_name: omnitest-agent-1
+    environment:
+      OMNITEST_MAX_VUSERS: "5000"
+      OMNITEST_CONTROLLER_HTTP: "http://controller:8080"
+    depends_on:
+      - controller
+    networks:
+      - omnitest-net
+
+  agent-2:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["agent", "--controller=controller:9090", "--name=agent-2"]
+    container_name: omnitest-agent-2
+    environment:
+      OMNITEST_MAX_VUSERS: "5000"
+      OMNITEST_CONTROLLER_HTTP: "http://controller:8080"
+    depends_on:
+      - controller
+    networks:
+      - omnitest-net
+
+  agent-3:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["agent", "--controller=controller:9090", "--name=agent-3"]
+    container_name: omnitest-agent-3
+    environment:
+      OMNITEST_MAX_VUSERS: "5000"
+      OMNITEST_CONTROLLER_HTTP: "http://controller:8080"
+    depends_on:
+      - controller
+    networks:
+      - omnitest-net
+
+  dashboard:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: omnitest-dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: http://localhost:8080
+      VITE_WS_URL: ws://localhost:8080
+    depends_on:
+      - controller
+    networks:
+      - omnitest-net
+
+volumes:
+  pgdata:
+
+networks:
+  omnitest-net:
+    driver: bridge

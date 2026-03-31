@@ -1,0 +1,7 @@
+targets:
+  - name: "test"
+    base_url: "https://httpbin.org"
+scenarios:
+  - name: "broken test
+    vusers: not_a_number
+    duration: [invalid

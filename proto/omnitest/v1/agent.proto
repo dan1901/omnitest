@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package omnitest.v1;
+
+option go_package = "github.com/omnitest/omnitest/internal/grpc/omnitestv1";
+
+import "google/protobuf/timestamp.proto";
+
+// AgentService defines the gRPC service for Controller-Agent communication.
+service AgentService {
+  // Register registers an agent with the controller.
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
+  // Heartbeat sends periodic health checks from agent to controller.
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+
+  // StartTest instructs the agent to begin executing a test scenario.
+  rpc StartTest(StartTestRequest) returns (StartTestResponse);
+
+  // StopTest instructs the agent to stop an in-progress test.
+  rpc StopTest(StopTestRequest) returns (StopTestResponse);
+
+  // StreamMetrics streams real-time metrics from agent to controller.
+  rpc StreamMetrics(stream MetricReport) returns (StreamMetricsResponse);
+}
+
+// Agent status enum.
+enum AgentStatus {
+  AGENT_STATUS_UNSPECIFIED = 0;
+  AGENT_STATUS_IDLE = 1;
+  AGENT_STATUS_RUNNING = 2;
+  AGENT_STATUS_ERROR = 3;
+}
+
+// RegisterRequest is sent when an agent starts up.
+message RegisterRequest {
+  string agent_id = 1;
+  string hostname = 2;
+  int32 max_vusers = 3;
+  map<string, string> labels = 4;
+}
+
+message RegisterResponse {
+  bool accepted = 1;
+  string controller_id = 2;
+  int32 heartbeat_interval_seconds = 3;
+}
+
+// HeartbeatRequest is sent periodically by agents.
+message HeartbeatRequest {
+  string agent_id = 1;
+  AgentStatus status = 2;
+  double cpu_usage = 3;
+  double memory_usage = 4;
+  int32 active_vusers = 5;
+}
+
+message HeartbeatResponse {
+  bool acknowledged = 1;
+}
+
+// StartTestRequest instructs an agent to run a test.
+message StartTestRequest {
+  string test_run_id = 1;
+  string scenario_yaml = 2;
+  int32 assigned_vusers = 3;
+}
+
+message StartTestResponse {
+  bool accepted = 1;
+  string error_message = 2;
+}
+
+// StopTestRequest instructs an agent to stop a running test.
+message StopTestRequest {
+  string test_run_id = 1;
+}
+
+message StopTestResponse {
+  bool stopped = 1;
+}
+
+// MetricReport is streamed from agent to controller during test execution.
+message MetricReport {
+  string agent_id = 1;
+  string test_run_id = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  int64 total_requests = 4;
+  int64 total_errors = 5;
+  double rps = 6;
+  double avg_latency_ms = 7;
+  double p50_latency_ms = 8;
+  double p95_latency_ms = 9;
+  double p99_latency_ms = 10;
+  int32 active_vusers = 11;
+}
+
+message StreamMetricsResponse {
+  bool acknowledged = 1;
+}

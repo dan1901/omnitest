@@ -1,0 +1,26 @@
+# 08-error-rate.yaml
+# 에러율 모니터링 데모.
+# 의도적으로 불안정한 엔드포인트를 테스트하여 에러율을 측정.
+# Threshold로 에러율 허용 범위를 설정.
+#
+# 실행:
+#   omnitest run examples/scenarios/08-error-rate.yaml
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+
+scenarios:
+  - name: "불안정 API 에러율 측정 (30% 에러 예상)"
+    target: "demo"
+    vusers: 20
+    duration: "20s"
+    requests:
+      - method: GET
+        path: "/api/flaky"
+
+thresholds:
+  - metric: "http_req_failed"
+    condition: "< 10%"             # 10% 미만이면 PASS (이 테스트는 FAIL 예상)

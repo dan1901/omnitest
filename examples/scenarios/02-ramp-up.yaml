@@ -1,0 +1,22 @@
+# 02-ramp-up.yaml
+# Ramp-up 기능 데모. VUser가 점진적으로 증가하는 패턴.
+# nGrinder의 "Ramp-Up" 설정과 동일한 개념.
+#
+# 실행:
+#   omnitest run examples/scenarios/02-ramp-up.yaml
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+
+scenarios:
+  - name: "Ramp-Up 테스트 - 점진적 부하 증가"
+    target: "demo"
+    vusers: 50
+    duration: "30s"
+    ramp_up: "10s"      # 10초에 걸쳐 0 → 50 VUser 점진 증가
+    requests:
+      - method: GET
+        path: "/api/products"

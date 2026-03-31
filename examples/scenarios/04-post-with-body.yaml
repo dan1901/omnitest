@@ -1,0 +1,40 @@
+# 04-post-with-body.yaml
+# POST 요청 + JSON Body 데모.
+# API 서버에 데이터를 전송하는 시나리오.
+#
+# 실행:
+#   omnitest run examples/scenarios/04-post-with-body.yaml
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "사용자 생성 API"
+    target: "demo"
+    vusers: 20
+    duration: "15s"
+    requests:
+      - method: POST
+        path: "/api/users"
+        body:
+          name: "Test User"
+          email: "test@omnitest.io"
+          role: "member"
+
+  - name: "주문 생성 API (5% 에러 예상)"
+    target: "demo"
+    vusers: 30
+    duration: "20s"
+    ramp_up: "5s"
+    requests:
+      - method: POST
+        path: "/api/orders"
+        body:
+          product_id: 42
+          quantity: 2
+          payment_method: "card"

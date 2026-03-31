@@ -1,0 +1,28 @@
+# 09-slow-endpoint.yaml
+# 느린 응답 엔드포인트 테스트 데모.
+# P99 레이턴시가 높은 엔드포인트의 성능 특성을 분석.
+# 리포트에서 응답 시간 분포를 확인하는 용도.
+#
+# 실행:
+#   omnitest run examples/scenarios/09-slow-endpoint.yaml --out json,html
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+
+scenarios:
+  - name: "느린 API 응답 분석"
+    target: "demo"
+    vusers: 10
+    duration: "15s"
+    requests:
+      - method: GET
+        path: "/api/slow"
+
+thresholds:
+  - metric: "http_req_duration_p99"
+    condition: "< 3000ms"          # 3초 미만이면 PASS
+  - metric: "http_req_duration_avg"
+    condition: "< 1500ms"          # 평균 1.5초 미만

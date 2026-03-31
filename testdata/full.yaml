@@ -1,0 +1,48 @@
+version: "1"
+
+targets:
+  - name: "httpbin-get"
+    base_url: "https://httpbin.org"
+    headers:
+      Authorization: "Bearer test-token"
+      Accept: "application/json"
+
+  - name: "httpbin-post"
+    base_url: "https://httpbin.org"
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "light load"
+    target: "httpbin-get"
+    vusers: 5
+    duration: "5s"
+    requests:
+      - method: GET
+        path: "/get"
+
+  - name: "heavy load"
+    target: "httpbin-post"
+    vusers: 50
+    duration: "30s"
+    requests:
+      - method: POST
+        path: "/post"
+        body:
+          key: "value"
+          count: 42
+
+  - name: "stress test"
+    target: "httpbin-get"
+    vusers: 200
+    duration: "60s"
+    ramp_up: "10s"
+    requests:
+      - method: GET
+        path: "/get"
+
+thresholds:
+  - metric: "http_req_duration_p99"
+    condition: "< 500ms"
+  - metric: "http_req_failed"
+    condition: "< 1%"

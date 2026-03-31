@@ -1,0 +1,52 @@
+# 11-crud-workflow.yaml
+# CRUD 전체 메서드 데모 (GET/POST/PUT/DELETE).
+# REST API의 전체 라이프사이클을 테스트.
+#
+# 실행:
+#   omnitest run examples/scenarios/11-crud-workflow.yaml
+
+version: "1"
+
+targets:
+  - name: "demo"
+    base_url: "http://localhost:8888"
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "GET - 사용자 조회"
+    target: "demo"
+    vusers: 10
+    duration: "10s"
+    requests:
+      - method: GET
+        path: "/api/users"
+
+  - name: "POST - 사용자 생성"
+    target: "demo"
+    vusers: 10
+    duration: "10s"
+    requests:
+      - method: POST
+        path: "/api/users"
+        body:
+          name: "New User"
+          email: "new@omnitest.io"
+
+  - name: "PUT - 사용자 수정"
+    target: "demo"
+    vusers: 10
+    duration: "10s"
+    requests:
+      - method: PUT
+        path: "/api/users/1"
+        body:
+          name: "Updated User"
+
+  - name: "DELETE - 사용자 삭제"
+    target: "demo"
+    vusers: 5
+    duration: "10s"
+    requests:
+      - method: DELETE
+        path: "/api/users/1"

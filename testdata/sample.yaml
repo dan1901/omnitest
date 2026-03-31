@@ -1,0 +1,14 @@
+version: "1"
+
+targets:
+  - name: "httpbin"
+    base_url: "https://httpbin.org"
+
+scenarios:
+  - name: "sample test"
+    target: "httpbin"
+    vusers: 10
+    duration: "10s"
+    requests:
+      - method: GET
+        path: "/get"

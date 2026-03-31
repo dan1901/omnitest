@@ -1,0 +1,25 @@
+# 06-headers-auth.yaml
+# 커스텀 헤더 + 인증 토큰 데모.
+# 환경변수 치환(${VAR})을 활용한 시크릿 관리.
+#
+# 실행:
+#   API_TOKEN=my-secret-token omnitest run examples/scenarios/06-headers-auth.yaml
+
+version: "1"
+
+targets:
+  - name: "demo-auth"
+    base_url: "http://localhost:8888"
+    headers:
+      Authorization: "Bearer ${API_TOKEN}"   # 환경변수에서 토큰 주입
+      Accept: "application/json"
+      X-Request-Source: "omnitest"
+
+scenarios:
+  - name: "인증이 필요한 API 테스트"
+    target: "demo-auth"
+    vusers: 15
+    duration: "15s"
+    requests:
+      - method: GET
+        path: "/api/echo"
