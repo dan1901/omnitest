@@ -207,17 +207,18 @@ See [examples/README.md](examples/README.md) for the full list.
 | CLI | Cobra |
 | Container | Docker + Docker Compose |
 
-## Comparison with nGrinder
+## Key Characteristics
 
-| | nGrinder | OmniTest |
-|---|----------|----------|
-| **Install** | JVM + Tomcat + DB (30min+) | Single binary (5min) |
-| **Memory** | 1-2GB per agent | 100-200MB per agent |
-| **VUsers/agent** | ~3,000 | ~10,000+ |
-| **Scripts** | Groovy/Jython | YAML (simple) + Go (advanced) |
-| **CI/CD** | REST API only | CLI + threshold exit codes |
-| **Monitoring** | Polling-based | WebSocket real-time |
-| **Cloud** | Manual deployment | Docker Compose / K8s (planned) |
+| | OmniTest |
+|---|----------|
+| **Install** | Single binary, no dependencies (5min) |
+| **Memory** | ~100-200MB per agent |
+| **VUsers/agent** | 10,000+ (goroutine-based) |
+| **Scenarios** | YAML declarative + Go scripting (planned) |
+| **CI/CD** | CLI native + threshold exit codes |
+| **Monitoring** | WebSocket real-time streaming |
+| **Deployment** | Docker Compose / K8s (planned) |
+| **Reports** | JSON + HTML with interactive charts |
 
 ## Roadmap
 
