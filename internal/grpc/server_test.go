@@ -139,7 +139,7 @@ func TestServer_StopTest_NoHandler(t *testing.T) {
 	handler := &mockAgentHandler{}
 	server := NewServer(0, handler)
 
-	resp, err := server.StopTest(nil, &omnitestv1.StopTestRequest{TestRunId: "run-1"})
+	resp, err := server.StopTest(context.Background(), &omnitestv1.StopTestRequest{TestRunId: "run-1"})
 	if err != nil {
 		t.Fatalf("StopTest() error = %v", err)
 	}
@@ -155,7 +155,7 @@ func TestServer_StopTest_WithHandler(t *testing.T) {
 		return &omnitestv1.StopTestResponse{Stopped: true}, nil
 	}
 
-	resp, err := server.StopTest(nil, &omnitestv1.StopTestRequest{TestRunId: "run-1"})
+	resp, err := server.StopTest(context.Background(), &omnitestv1.StopTestRequest{TestRunId: "run-1"})
 	if err != nil {
 		t.Fatalf("StopTest() error = %v", err)
 	}
